@@ -198,6 +198,7 @@ public class TrainMurderMysteryLangGen extends FabricLanguageProvider {
         builder.add(TrainMurderMysteryItems.LOCKPICK, "Lockpick");
         builder.add(TrainMurderMysteryItems.KNIFE, "Knife");
         builder.add(TrainMurderMysteryItems.REVOLVER, "Revolver");
+        builder.add(TrainMurderMysteryItems.BODY_BAG, "Body Bag");
         builder.add(TrainMurderMysteryItems.LETTER, "Letter");
         builder.add(TrainMurderMysteryItems.LETTER.getTranslationKey() + ".instructions", "Instructions");
 

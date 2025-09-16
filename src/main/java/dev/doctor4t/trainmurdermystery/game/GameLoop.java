@@ -2,6 +2,8 @@ package dev.doctor4t.trainmurdermystery.game;
 
 import dev.doctor4t.trainmurdermystery.cca.TrainMurderMysteryComponents;
 import dev.doctor4t.trainmurdermystery.cca.WorldGameComponent;
+import dev.doctor4t.trainmurdermystery.entity.PlayerBodyEntity;
+import dev.doctor4t.trainmurdermystery.index.TrainMurderMysteryEntities;
 import dev.doctor4t.trainmurdermystery.index.TrainMurderMysteryItems;
 import net.minecraft.block.Blocks;
 import net.minecraft.component.DataComponentTypes;
@@ -12,6 +14,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 
 import java.util.*;
@@ -93,6 +96,7 @@ public class GameLoop {
             ServerPlayerEntity player = rolePlayerPool.getFirst();
             rolePlayerPool.removeFirst();
             player.giveItemStack(new ItemStack(TrainMurderMysteryItems.REVOLVER));
+            player.giveItemStack(new ItemStack(TrainMurderMysteryItems.BODY_BAG));
             gameComponent.addDetective(player);
         }
 
@@ -120,6 +124,22 @@ public class GameLoop {
 
     public static boolean isPlayerEliminated(PlayerEntity player) {
         return player == null || !player.isAlive() || player.isCreative() || player.isSpectator();
+    }
+
+    public static void killPlayer(PlayerEntity player, boolean spawnBody) {
+        player.kill();
+
+        if (spawnBody) {
+            PlayerBodyEntity body = TrainMurderMysteryEntities.PLAYER_BODY.create(player.getWorld());
+            body.setPlayerUuid(player.getUuid());
+
+            Vec3d spawnPos = player.getPos().add(player.getRotationVector().normalize().multiply(1));
+
+            body.refreshPositionAndAngles(spawnPos.getX(), player.getY(), spawnPos.getZ(), player.getHeadYaw(), 0f);
+            body.setYaw(player.getHeadYaw());
+            body.setHeadYaw(player.getHeadYaw());
+            player.getWorld().spawnEntity(body);
+        }
     }
 
     public enum WinStatus {
