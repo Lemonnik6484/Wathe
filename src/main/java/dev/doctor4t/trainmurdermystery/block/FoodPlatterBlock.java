@@ -1,7 +1,6 @@
 package dev.doctor4t.trainmurdermystery.block;
 
 import com.mojang.serialization.MapCodec;
-import dev.doctor4t.trainmurdermystery.block_entity.DrinkPlateBlockEntity;
 import dev.doctor4t.trainmurdermystery.block_entity.PlateBlockEntity;
 import dev.doctor4t.trainmurdermystery.index.TMMBlockEntities;
 import dev.doctor4t.trainmurdermystery.index.TMMDataComponentTypes;
@@ -11,19 +10,13 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -31,12 +24,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class DrinkPlateBlock extends BlockWithEntity {
-    public static final MapCodec<DrinkPlateBlock> CODEC = createCodec(DrinkPlateBlock::new);
-    public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
-    public DrinkPlateBlock(Settings settings) {
+public class FoodPlatterBlock extends BlockWithEntity {
+    public static final MapCodec<FoodPlatterBlock> CODEC = createCodec(FoodPlatterBlock::new);
+    public FoodPlatterBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
     }
 
     @Override
@@ -45,23 +36,8 @@ public class DrinkPlateBlock extends BlockWithEntity {
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
-    }
-
-    @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new DrinkPlateBlockEntity(TMMBlockEntities.DRINK_PLATE, pos, state);
-    }
-
-    @Override
-    public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
-    }
-
-    @Override
-    protected BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(FACING, rotation.rotate(state.get(FACING)));
+        return new PlateBlockEntity(TMMBlockEntities.PLATE, pos, state);
     }
 
     @Override
@@ -80,14 +56,14 @@ public class DrinkPlateBlock extends BlockWithEntity {
     }
 
     protected VoxelShape getShape(BlockState state) {
-        return Block.createCuboidShape(2, 0, 2, 14, 3, 14);
+        return Block.createCuboidShape(0, 0, 0, 16, 2, 16);
     }
 
     @Override
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (world.isClient) return ActionResult.SUCCESS;
 
-        if (!(world.getBlockEntity(pos) instanceof DrinkPlateBlockEntity blockEntity)) {
+        if (!(world.getBlockEntity(pos) instanceof PlateBlockEntity blockEntity)) {
             return ActionResult.PASS;
         }
 
@@ -120,7 +96,7 @@ public class DrinkPlateBlock extends BlockWithEntity {
                 player.playSoundToPlayer(SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1f, 1f);
                 player.setStackInHand(Hand.MAIN_HAND, randomItem);
             }
-        } if (player.getStackInHand(Hand.MAIN_HAND).isOf(TMMItems.POISON)) {
+        } if (player.getStackInHand(Hand.MAIN_HAND).isOf(TMMItems.POISON_VIAL)) {
             blockEntity.setPoisonedItemsCount(blockEntity.getPoisonedItemsCount() + 1);
             player.getStackInHand(Hand.MAIN_HAND).decrement(1);
             player.playSoundToPlayer(SoundEvents.BLOCK_BREWING_STAND_BREW, SoundCategory.BLOCKS, 0.5f, 1f);
@@ -131,9 +107,9 @@ public class DrinkPlateBlock extends BlockWithEntity {
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        if (!world.isClient || !type.equals(TMMBlockEntities.DRINK_PLATE)) {
+        if (!world.isClient || !type.equals(TMMBlockEntities.PLATE)) {
             return null;
         }
-        return DrinkPlateBlockEntity::clientTick;
+        return PlateBlockEntity::clientTick;
     }
 }
