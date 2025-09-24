@@ -17,6 +17,7 @@
     "client.AbstractClientPlayerEntityMixin",
     "client.EntityRendererDispatchMixin",
     "client.MinecraftClientMixin",
+    "client.PlayerEntityRendererMixin",
     "client.items.BipedEntityModelMixin",
     "client.items.ClientPlayerEntityMixin",
     "client.items.HeldItemRendererMixin",
