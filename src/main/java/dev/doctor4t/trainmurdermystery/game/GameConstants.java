@@ -4,13 +4,16 @@ import dev.doctor4t.trainmurdermystery.cca.PlayerShopComponent;
 import dev.doctor4t.trainmurdermystery.index.TMMItems;
 import dev.doctor4t.trainmurdermystery.util.ShopEntry;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -23,10 +26,16 @@ public interface GameConstants {
     int DOOR_AUTOCLOSE_TIME = getInTicks(0, 5);
 
     // Items
-    int KNIFE_COOLDOWN = getInTicks(1, 0);
-    int REVOLVER_COOLDOWN = getInTicks(0, 1);
+    Map<Item, Integer> ITEM_COOLDOWNS = new HashMap<>();
+    static void init() {
+        ITEM_COOLDOWNS.put(TMMItems.KNIFE, getInTicks(1, 0));
+        ITEM_COOLDOWNS.put(TMMItems.REVOLVER, getInTicks(0, 10));
+        ITEM_COOLDOWNS.put(TMMItems.GRENADE, getInTicks(5, 0));
+        ITEM_COOLDOWNS.put(TMMItems.LOCKPICK, getInTicks(2, 0));
+        ITEM_COOLDOWNS.put(TMMItems.CROWBAR, getInTicks(3, 0));
+        ITEM_COOLDOWNS.put(TMMItems.BODY_BAG, getInTicks(5, 0));
+    }
     int JAMMED_DOOR_TIME = getInTicks(1, 0);
-    int LOCKPICK_JAM_COOLDOWN = getInTicks(2, 0);
 
     // Sprint
     int MAX_SPRINTING_TICKS = getInTicks(0, 10);

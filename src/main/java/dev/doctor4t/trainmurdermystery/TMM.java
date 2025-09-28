@@ -2,6 +2,7 @@ package dev.doctor4t.trainmurdermystery;
 
 import com.google.common.reflect.Reflection;
 import dev.doctor4t.trainmurdermystery.command.*;
+import dev.doctor4t.trainmurdermystery.game.GameConstants;
 import dev.doctor4t.trainmurdermystery.index.*;
 import dev.doctor4t.trainmurdermystery.util.*;
 import net.fabricmc.api.ModInitializer;
@@ -25,6 +26,9 @@ public class TMM implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        // Init constants
+        GameConstants.init();
+
         // Registry initializers
         Reflection.initialize(TMMDataComponentTypes.class);
         TMMSounds.initialize();
