@@ -15,6 +15,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
+import org.ladysnake.cca.api.v3.component.tick.ServerTickingComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -185,3 +186,4 @@ public class TMM implements ModInitializer {
 // POST VIDEO
 // TORECORD: Ability to customize time of day for supporters + snow density
 // TODO: Watermark?
+// TODO: Grenades kill killers

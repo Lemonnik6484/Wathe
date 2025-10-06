@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import dev.doctor4t.trainmurdermystery.TMM;
 import dev.doctor4t.trainmurdermystery.cca.*;
 import dev.doctor4t.trainmurdermystery.client.gui.RoleAnnouncementText;
+import dev.doctor4t.trainmurdermystery.compat.TrainVoicePlugin;
 import dev.doctor4t.trainmurdermystery.entity.PlayerBodyEntity;
 import dev.doctor4t.trainmurdermystery.index.TMMDataComponentTypes;
 import dev.doctor4t.trainmurdermystery.index.TMMEntities;
@@ -202,6 +203,7 @@ public class GameFunctions {
             PlayerPsychoComponent.KEY.get(serverPlayerEntity).reset();
             PlayerNoteComponent.KEY.get(serverPlayerEntity).reset();
             PlayerShopComponent.KEY.get(serverPlayerEntity).reset();
+            TrainVoicePlugin.resetPlayer(serverPlayerEntity.getUuid());
 
             // remove item cooldowns
             var copy = new HashSet<>(serverPlayerEntity.getItemCooldownManager().entries.keySet());
@@ -372,6 +374,7 @@ public class GameFunctions {
             GameTimeComponent.KEY.get(victim.getWorld()).addTime(GameConstants.TIME_ON_CIVILIAN_KILL);
         }
 
+        TrainVoicePlugin.addPlayer(victim.getUuid());
     }
 
     public static boolean shouldDropOnDeath(@NotNull ItemStack stack) {
