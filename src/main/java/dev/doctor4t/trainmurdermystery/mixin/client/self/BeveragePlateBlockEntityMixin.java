@@ -2,7 +2,7 @@ package dev.doctor4t.trainmurdermystery.mixin.client.self;
 
 import dev.doctor4t.trainmurdermystery.block_entity.BeveragePlateBlockEntity;
 import dev.doctor4t.trainmurdermystery.client.TMMClient;
-import dev.doctor4t.trainmurdermystery.event.CanSeePoison;
+import dev.doctor4t.trainmurdermystery.api.event.CanSeePoison;
 import dev.doctor4t.trainmurdermystery.index.TMMParticles;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
