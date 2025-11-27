@@ -8,7 +8,8 @@ import dev.doctor4t.trainmurdermystery.api.Role;
 import dev.doctor4t.trainmurdermystery.cca.GameWorldComponent;
 import dev.doctor4t.trainmurdermystery.cca.PlayerMoodComponent;
 import dev.doctor4t.trainmurdermystery.cca.PlayerPoisonComponent;
-import dev.doctor4t.trainmurdermystery.api.event.AllowPlayerPunching;
+import dev.doctor4t.trainmurdermystery.event.AllowPlayerPunching;
+import dev.doctor4t.trainmurdermystery.event.IsPlayerPunchable;
 import dev.doctor4t.trainmurdermystery.game.GameConstants;
 import dev.doctor4t.trainmurdermystery.game.GameFunctions;
 import dev.doctor4t.trainmurdermystery.index.TMMDataComponentTypes;
@@ -76,10 +77,10 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                 } else {
                     sprintingTicks = Math.min(sprintingTicks + 0.25f, role.getMaxSprintTime());
                 }
-            }
 
-            if (sprintingTicks <= 0) {
-                this.setSprinting(false);
+                if (sprintingTicks <= 0) {
+                    this.setSprinting(false);
+                }
             }
         }
     }
@@ -87,10 +88,6 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @WrapMethod(method = "attack")
     public void attack(Entity target, Operation<Void> original) {
         PlayerEntity self = (PlayerEntity) (Object) this;
-        if (!GameFunctions.isPlayerAliveAndSurvival(self) || this.getMainHandStack().isOf(TMMItems.KNIFE)
-                || (target instanceof PlayerEntity playerTarget && AllowPlayerPunching.EVENT.invoker().allowPunching(self, playerTarget))) {
-            original.call(target);
-        }
 
         if (getMainHandStack().isOf(TMMItems.BAT) && target instanceof PlayerEntity playerTarget && this.getAttackCooldownProgress(0.5F) >= 1f) {
             GameFunctions.killPlayer(playerTarget, true, self, GameConstants.DeathReasons.BAT);
@@ -98,6 +95,12 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                     playerTarget.getX(), playerTarget.getEyeY(), playerTarget.getZ(),
                     TMMSounds.ITEM_BAT_HIT, SoundCategory.PLAYERS,
                     3f, 1f);
+            return;
+        }
+
+        if (!GameFunctions.isPlayerAliveAndSurvival(self) || this.getMainHandStack().isOf(TMMItems.KNIFE)
+                || IsPlayerPunchable.EVENT.invoker().gotPunchable(target) || AllowPlayerPunching.EVENT.invoker().allowPunching(self)) {
+            original.call(target);
         }
     }
 
