@@ -60,6 +60,7 @@
     "compat.sodium.RenderSectionManagerMixin",
     "compat.sodium.ShaderLoaderMixin",
     "compat.sodium.SodiumShaderMixin",
-    "compat.sodium.SodiumTransformerMixin"
+    "compat.sodium.SodiumTransformerMixin",
+    "compat.controlify.ControlifyInGameInputHandlerMixin"
   ]
 }
